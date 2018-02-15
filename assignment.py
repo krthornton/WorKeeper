@@ -16,9 +16,14 @@ class Assignment():
             due = "Indefinite"
         else:
             due = self.__due
-        output = ("Assignment: %s\nDue: %s\nSubject: %s\nCompleted: %s\n"
-                    % (self.__name, due, self.__subject, done))
-        return output
+        output = []
+        output.append('{:>12}'.format("Assignment: ") + "%s" % self.__name)
+        output.append('{:>12}'.format("Due: ") + "%s" % due)
+        output.append('{:>12}'.format("Subject: ") + "%s" % self.__subject)
+        output.append('{:>12}'.format("Completed: ") + "%s" % done)
+        output_str = ("%s\n%s\n%s\n%s\n" % (output[0], output[1], output[2],
+                                            output[3]))
+        return output_str
 
     def info(self):
         output = {"name": self.__name, "due": self.__due,
