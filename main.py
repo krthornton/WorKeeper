@@ -1,7 +1,6 @@
 """
 To Do:
-1. Change output to be listed as a table
-2. Split list assignments to be in two lists: unfinished and completed
+1. Convert "true" and "false" to actual booleans. Convert save to json
 3. Add ability to delete assignment
 4. Add ability to edit assignment
 """
@@ -42,12 +41,13 @@ def main():
             due = input("Enter a due date: ")
             subject = input("Enter the subject: ")
             print()
-            make_assignment(assignment_dic, name, due, subject, "False")
+            x = make_assignment(assignment_dic, name, due, subject, "False")
 
             # Print welcome screen
             os.system("cls")
             print("||| WorKeeper |||\n")
-            print("Assignment created!\n")
+            if x == True:
+                print("Assignment created!\n")
         if answer == "3":
             index = 1
             welcome()
@@ -101,18 +101,39 @@ def save_assignments(assignments_dic, save_file):
 def welcome():
     os.system("cls")
     print("||| WorKeeper |||\n")
+    print()
 
 
 
 def list_assignments(assignment_dic):
+    print("Unfinished Assignments:\n")
     for i in assignment_dic:
-        print(i)
-
+        if "False" in i.info()["done"]:
+            print(i)
+    print("\nCompleted Assignments:\n")
+    for i in assignment_dic:
+        if "True" in i.info()["done"]:
+            print(i)
+    print()
 
 
 def make_assignment(assignment_dic, name=None, due=None, subject=None,
                     done=None):
-    assignment_dic.append(Assignment(name, due, subject, done))
+    # Returns True if assignment is successfully created
+    if ("$" in name) or ("$" in due) or ("$" in subject):
+        problem("invalid character '$'")
+        return False
+    else:
+        assignment_dic.append(Assignment(name, due, subject, done))
+        return True
+
+
+
+def problem(message):
+    # message must be a string
+    os.system("cls")
+    print("||| WorKeeper |||\n")
+    input("Error: %s" % message)
 
 
 
