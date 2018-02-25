@@ -8,7 +8,7 @@ class Assignment():
 
     # Returns current assignments details as string
     def __str__(self):
-        if "True" in self.__done:
+        if "true" in self.__done:
             done = "Completed!"
         else:
             done = "Unfinished"
@@ -25,6 +25,7 @@ class Assignment():
                                             output[3]))
         return output_str
 
+    # Returns assignment info in dictionary form
     def info(self):
         output = {"name": self.__name, "due": self.__due,
                     "subject": self.__subject, "done": self.__done}
@@ -32,9 +33,4 @@ class Assignment():
 
     # Marks an assignment as completed
     def complete(self):
-        self.__done = "True"
-
-    # Saves current assignment details to assignments.txt
-    #def save(self, save_file):
-    #    save_file.write("%s$%s$%s$%s\n" % (self.__name, self.__due,
-    #                    self.__subject, self.__done))
+        self.__done = "true"

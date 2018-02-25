@@ -1,21 +1,23 @@
 """
 To Do:
-1. Convert "true" and "false" to actual booleans. Convert save to json
+1. Add feature so that users can't make two of the same assignment name
+2. Prevent user from entering empt assignment name
 3. Add ability to delete assignment
 4. Add ability to edit assignment
 """
 
 from assignment import *
 import os
+import json
+
 
 
 def main():
-
     # Print welcome screen
     welcome()
 
     # Load the save file and load previously saved assignments
-    save_file = open("assignments.txt", "r")
+    save_file = open("assignments.json", "r+")
     assignment_dic = []
     load_assignments(assignment_dic, save_file)
     save_file.close() # Close file after reading
@@ -41,7 +43,7 @@ def main():
             due = input("Enter a due date: ")
             subject = input("Enter the subject: ")
             print()
-            x = make_assignment(assignment_dic, name, due, subject, "False")
+            x = make_assignment(assignment_dic, name, due, subject, "false")
 
             # Print welcome screen
             os.system("cls")
@@ -70,7 +72,7 @@ def main():
             break
 
     # Open file for writing and save assignments
-    write_file = open("assignments.txt", "w")
+    write_file = open("assignments.json", "w")
     welcome()
     print("Saving...")
     save_assignments(assignment_dic, write_file)
@@ -80,60 +82,48 @@ def main():
 
 
 
+# Used to return Assignment objects as dictionaries for json to save
+def jsonDefault(o):
+    return o.__dict__
+
+# Returns list of dictionaries from given file object
 def load_assignments(assignment_dic, save_file):
-    for line in save_file:
-        line = line.split("$")
-        if len(line) == 4:
-            assignment_dic.append(Assignment(line[0], line[1],
-                                             line[2], line[3]))
-
-
-
-def save_assignments(assignments_dic, save_file):
-    for i in assignments_dic:
-        i = i.info()
-        x = ("%s$%s$%s$%s" % (i["name"], i["due"], i["subject"], i["done"]))
-        save_file.write("%s\n" % x)
+    try:
+        data = json.load(save_file)
+        for i in data:
+            assignment_dic.append(Assignment(i["_Assignment__name"],
+                                             i["_Assignment__due"],
+                                             i["_Assignment__subject"],
+                                             i["_Assignment__done"]))
+    except:
+        print("Generating new save file...\nIf this is not your first time",
+              "opening WorKeeper,\nyour save file may be corrupted.\n")
     return
 
-
+def save_assignments(assignments_dic, save_file):
+    json.dump(assignments_dic, save_file, default = jsonDefault, indent = 4)
+    return
 
 def welcome():
     os.system("cls")
     print("||| WorKeeper |||\n")
     print()
 
-
-
 def list_assignments(assignment_dic):
     print("Unfinished Assignments:\n")
     for i in assignment_dic:
-        if "False" in i.info()["done"]:
+        if "false" in i.info()["done"]:
             print(i)
     print("\nCompleted Assignments:\n")
     for i in assignment_dic:
-        if "True" in i.info()["done"]:
+        if "true" in i.info()["done"]:
             print(i)
     print()
 
-
 def make_assignment(assignment_dic, name=None, due=None, subject=None,
                     done=None):
-    # Returns True if assignment is successfully created
-    if ("$" in name) or ("$" in due) or ("$" in subject):
-        problem("invalid character '$'")
-        return False
-    else:
-        assignment_dic.append(Assignment(name, due, subject, done))
-        return True
-
-
-
-def problem(message):
-    # message must be a string
-    os.system("cls")
-    print("||| WorKeeper |||\n")
-    input("Error: %s" % message)
+    assignment_dic.append(Assignment(name, due, subject, done))
+    return True
 
 
 
