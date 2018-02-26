@@ -1,7 +1,6 @@
 """
 To Do:
-3. Add ability to delete assignment
-4. Add ability to edit assignment
+1. Add ability to edit assignments
 """
 
 from assignment import *
@@ -25,7 +24,8 @@ def main():
         answer = input("Enter [1] to list assignments\n" +
                         "Enter [2] to enter a new assignment\n" +
                         "Enter [3] to mark an assignment as completed\n" +
-                        "Enter [4] to save and exit: ")
+                        "Enter [4] to save and exit\n" +
+                        "Enter [5] to delete an assignment: ")
         print()
         if answer == "1":
             # Print welcome screen
@@ -76,6 +76,24 @@ def main():
 
         if answer == "4":
             break
+
+        if answer == "5":
+            index = 1
+            welcome()
+            if assignment_dic == []:
+                welcome()
+                print("Can't delete when list is empty\n")
+                continue
+            for i in assignment_dic:
+                print("%i. %s" % (index, i.info()["name"]))
+                index += 1
+            response = input("Which assignment do you wish to mark delete?" +
+                             "(Please match case): ")
+            for i in assignment_dic:
+                if response == i.info()["name"]:
+                    assignment_dic.remove(i)
+                    welcome()
+                    print("Assignment %s removed\n" % (i.info()["name"]))
 
     # Open file for writing and save assignments
     write_file = open("assignments.json", "w")
