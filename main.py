@@ -1,7 +1,5 @@
 """
 To Do:
-1. Add feature so that users can't make two of the same assignment name
-2. Prevent user from entering empt assignment name
 3. Add ability to delete assignment
 4. Add ability to edit assignment
 """
@@ -39,7 +37,15 @@ def main():
         if answer == "2":
             # Print welcome screen
             welcome()
-            name = input("Enter an assignment name: ")
+            name = ""
+            while name == "":
+                name = input("Please enter an assignment name: ")
+                if name == "":
+                    print("Error: name can't be empty")
+                for i in assignment_dic:
+                    if i.info()["name"] == name:
+                        print("Error: assignment with name already exists")
+                        name = ""
             due = input("Enter a due date: ")
             subject = input("Enter the subject: ")
             print()
