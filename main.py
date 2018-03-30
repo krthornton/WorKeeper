@@ -150,5 +150,6 @@ def make_assignment(assignment_dic, name=None, due=None, subject=None,
     return True
 
 
-
-main()
+if __name__ == "__main__":
+    # runs workeeper in command line mode
+    main()
